@@ -72,7 +72,6 @@ public class CalFrame extends JFrame  {
 		
 		super("John Quirke Calculator V 1.0");
 		makeFrame();
-		makeFrame();
 		makePanels();
 		makeScreen();
 		makeNumbersGrid();
@@ -109,6 +108,7 @@ public class CalFrame extends JFrame  {
 	    // Add JMenu bar
 	    setSize(500, 400);
 	    setLocation(200, 200);
+	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	       
 	    }
 	
