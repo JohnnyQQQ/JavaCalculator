@@ -40,7 +40,8 @@ public class CalFrame extends JFrame  {
 	JMenu file, help, ver;
 	JMenuItem quit, instructions, about;
 	String keysPressed = "";
-	String    previousOp  = "=";
+	String previousOp  = "=";
+	
 	JButton[] buttons;
 	JButton btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, dec, clear;
 	JButton divide, plus, minus, multiply, equals;
@@ -250,7 +251,6 @@ public class CalFrame extends JFrame  {
 	        clear.setBorder(raisedBorder);
 	        clear.setToolTipText("Clear all entries");
 	        clear.setFont(fsize);
-	        clear.addActionListener(new ClearListener());
 	        panelButtons.add(clear);
 	        
 			}
@@ -259,9 +259,8 @@ public class CalFrame extends JFrame  {
 	
 	public void clearScreen(){
 		
-		startNumber = true;         // Expecting number, not op.
-        screen.setText("0");
-        previousOp  = "=";
+		screenTop.setText("Clear");       
+        screen.setText("0");       
         logic.setTotal("0");
        
 	}
@@ -280,35 +279,25 @@ public class CalFrame extends JFrame  {
 		    /** Listener for all op buttons. */
 		    class OpListener implements ActionListener {
 		        public void actionPerformed(ActionEvent e) {
-		       
-		            	
+		        	
+		        		            	
 		                startNumber = true;  
 		                
 		                try {
 		                  
 		                    String displayText = screen.getText();
-		                    		                    
+		                                     
 		                    if (previousOp.equals("=")) {
-		                    	
-		                    	topNumbers.add("=");
-		                    	System.out.println();
-		                        logic.setTotal(displayText);
-		                        
-		                    } else if (previousOp.equals("+")) {
-		                    	topNumbers.add("+");
+		                        logic.setTotal(displayText);		                        
+		                    } else if (previousOp.equals("+")) {		                    	
 		                        logic.add(displayText);
-		                    } else if (previousOp.equals("-")) {
-		                    	topNumbers.add("-");
+		                    } else if (previousOp.equals("-")) {		                    	
 		                        logic.subtract(displayText);
-		                    } else if (previousOp.equals("*")) {
-		                    	topNumbers.add("*");
+		                    } else if (previousOp.equals("*")) {		                    	
 		                        logic.multiply(displayText);
-		                    } else if (previousOp.equals("/")) {
-		                    	topNumbers.add("/");
-		                        logic.divide(displayText);
-		                        
-		                    } else if (previousOp.equals("%")) {
-		                    	topNumbers.add("%");
+		                    } else if (previousOp.equals("/")) {		                    	
+		                        logic.divide(displayText);		                        
+		                    } else if (previousOp.equals("%")) {		                    
 		                        logic.percent(displayText);
 		                        System.out.println("percent");
 		                    }
@@ -317,6 +306,7 @@ public class CalFrame extends JFrame  {
 		                    printNums();
 		                    screen.setText("" + logic.getTotalString());
 		                    
+		                    
 		                } catch (NumberFormatException ex) {
 		                	clearScreen();
 		                    screen.setText("Error");
@@ -324,6 +314,7 @@ public class CalFrame extends JFrame  {
 		                
 		                //... set _previousOp for the next operator.
 		                previousOp = e.getActionCommand();
+		                screenTop.setText(e.getActionCommand());
 		            }
 		        }
 		
@@ -351,24 +342,20 @@ public class CalFrame extends JFrame  {
 		                //... Add this digit to the end of the display field
 		                screen.setText(screen.getText() + digit);
 		                
-		               
+            }
+		            
+		            if(e.getSource() == clear ){
+		            	
+		            	clearScreen();
+		            	
 		            }
 		        }
 		   
-			     
+			    
 		  }// end action Listener
 		  
 		  
-		    class ClearListener implements ActionListener {
-		        public void actionPerformed(ActionEvent e) {
-		        	
-		        	clearScreen();
-		        }
-		        
-		        
-		       
-		    }	 
-		 
+	
 	
 			
 }// end code

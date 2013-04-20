@@ -9,6 +9,7 @@ public class CalcLogic {
     /** Constructor */
     
     public CalcLogic() {
+    	
         currentTotal = 0.0;
     }
     
