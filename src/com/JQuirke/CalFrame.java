@@ -11,6 +11,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -28,29 +29,29 @@ public class CalFrame extends JFrame  {
 	
 	
 	private static final String COLOR = null;
-	JMenuBar menubar;
-	JMenu makeMenuItem;
-	JPanel panel = new JPanel(new BorderLayout());
-	JPanel textFieldTop = new JPanel(new FlowLayout());
-	JLabel screen = new JLabel("0");
-	JLabel screenTop = new JLabel("Calculator ");
-	Font fsize = new Font("Dialog", Font.PLAIN, 15);
-	JPanel panelButtons = new JPanel(new GridLayout(4,3,2,4));
-	JMenuBar menuBar;
-	JMenu file, help, ver;
-	JMenuItem quit, instructions, about;
-	String keysPressed = "";
-	String previousOp  = "=";
+	private JMenuBar menubar;
+	private JMenu makeMenuItem;
+	private JPanel panel = new JPanel(new BorderLayout());
+	private JPanel textFieldTop = new JPanel(new FlowLayout());
+	private JLabel screen = new JLabel(" ");
+	private JLabel screenTop = new JLabel("Calculator ");
+	private Font fsize = new Font("Dialog", Font.PLAIN, 15);
+	private JPanel panelButtons = new JPanel(new GridLayout(4,3,2,4));
+	private JMenuBar menuBar;
+	private JMenu file, help, ver;
+	private JMenuItem quit, instructions, about;
+	private String keysPressed = "";
+	private String previousOp  = "=";
 	
-	JButton[] buttons;
-	JButton btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, dec, clear;
-	JButton divide, plus, minus, multiply, equals;
-	ArrayList<String> topNumbers = new ArrayList<String>();
-	String input;
-	CalcLogic logic = new CalcLogic();
-	boolean   startNumber = true;
-	ActionListener numListener = new NumListener();
-	ActionListener opListener = new OpListener();
+	private JButton[] buttons;
+	private JButton btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, dec, clear;
+	private JButton divide, plus, minus, multiply, equals;
+	private ArrayList<String> topNumbers = new ArrayList<String>();
+	private String input;
+	private CalcLogic logic = new CalcLogic();
+	private boolean   startNumber = true;
+	private ActionListener numListener = new NumListener();
+	private ActionListener opListener = new OpListener();
 	
 	
 	
@@ -126,7 +127,7 @@ public class CalFrame extends JFrame  {
 	        eastSide.setPreferredSize(new Dimension(60, 100));
 	        compound = BorderFactory.createCompoundBorder(raisedbevel, loweredbevel);   
 	      
-			 String[] func = {"%", "MRC", "M+", "M-"};
+			 String[] func = {"MR", "MC", "M+", "M-"};
 		        for (int i = 0; i < func.length; i++) {
 		            JButton b = new JButton(func[i]);
 		            b.addActionListener(opListener);
@@ -251,6 +252,7 @@ public class CalFrame extends JFrame  {
 	        clear.setBorder(raisedBorder);
 	        clear.setToolTipText("Clear all entries");
 	        clear.setFont(fsize);
+	        clear.addActionListener(numListener);
 	        panelButtons.add(clear);
 	        
 			}
@@ -297,10 +299,7 @@ public class CalFrame extends JFrame  {
 		                        logic.multiply(displayText);
 		                    } else if (previousOp.equals("/")) {		                    	
 		                        logic.divide(displayText);		                        
-		                    } else if (previousOp.equals("%")) {		                    
-		                        logic.percent(displayText);
-		                        System.out.println("percent");
-		                    }
+		                    } 
 		                    
 		                    
 		                    printNums();
@@ -330,31 +329,31 @@ public class CalFrame extends JFrame  {
 		 /**
 		  * Action event numbers for the 
 		  */
-		  
+
 		    class NumListener implements ActionListener {
-		        public void actionPerformed(ActionEvent e) {
-		            String digit = e.getActionCommand(); // Get text from button
-		            if (startNumber) {
-		                //... This is the first digit, clear field and set
-		                screen.setText(digit);
-		                startNumber = false;
-		            } else {
-		                //... Add this digit to the end of the display field
-		                screen.setText(screen.getText() + digit);
-		                
-            }
-		            
-		            if(e.getSource() == clear ){
-		            	
-		            	clearScreen();
-		            	
-		            }
-		        }
-		   
-			    
-		  }// end action Listener
-		  
-		  
+		    	public void actionPerformed(ActionEvent e) {
+		    		String digit = e.getActionCommand(); // Get text from button
+		    		if (startNumber) {
+		    			//... This is the first digit, clear field and set
+		    			screen.setText(digit);
+		    			startNumber = false;
+		    		} else {
+		    			//... Add this digit to the end of the display field
+		    			screen.setText(screen.getText() + digit);
+
+		    		}
+
+		    		if(e.getSource() == clear ){
+
+		    			clearScreen();
+
+		    		}
+		    	}
+
+
+		    }// end action Listener
+
+
 	
 	
 			

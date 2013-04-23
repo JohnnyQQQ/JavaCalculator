@@ -37,22 +37,7 @@ public class CalcLogic {
         currentTotal /= convertToNumber(n);
     }
     
-    /*
-     * Percent method
-     */
-    public void percent(String n) {
-    	
-    	Double d = Double.parseDouble(n);
-    	percent = d / 1000 * d;
-    	currentTotal = convertToNumber(d);
-    	System.out.println("here is percent " + d);
-        
-    }
-    
-    
-    /*
-     * Method to convert strings to doubles
-     */
+
     private Double convertToNumber(String n) {
     	
     	Double d = Double.parseDouble(n);
