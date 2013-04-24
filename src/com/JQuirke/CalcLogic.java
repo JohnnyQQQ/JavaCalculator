@@ -37,6 +37,28 @@ public class CalcLogic {
         currentTotal /= convertToNumber(n);
     }
     
+    public void sqRoot(String n) {
+    	
+        currentTotal =  Math.sqrt(convertToNumber(n));
+    }
+    
+public void reciprocalFunction(String n) {
+    	
+        currentTotal =  1 / convertToNumber(n);
+    }
+
+public void percent(String n) {
+	
+	currentTotal = convertToNumber(n) / 100;
+}
+
+public void clearExisting(String n){
+	
+	new CalFrame().getScreenTop().setText("Clear");       
+	new CalFrame().getScreen().setText("0");       
+  
+   
+}
 
     private Double convertToNumber(String n) {
     	
@@ -52,4 +74,6 @@ private Double convertToNumber(Double n) {
     	return currentTotal;
      
     }
+
+
 }

@@ -1,6 +1,14 @@
+//#############################################################
+// Java Calculator 
+//@Author John Quirke
+//@Email John@JohnQuirke.com
+//Date April 2013
+//Version 1.0
+//@Class CalFrame 
+//#############################################################
+
+
 package com.JQuirke;
-
-
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -19,6 +27,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
@@ -27,10 +36,7 @@ import javax.swing.border.EtchedBorder;
 
 public class CalFrame extends JFrame  {
 	
-	
-	private static final String COLOR = null;
-	private JMenuBar menubar;
-	private JMenu makeMenuItem;
+
 	private JPanel panel = new JPanel(new BorderLayout());
 	private JPanel textFieldTop = new JPanel(new FlowLayout());
 	private JLabel screen = new JLabel(" ");
@@ -40,35 +46,28 @@ public class CalFrame extends JFrame  {
 	private JMenuBar menuBar;
 	private JMenu file, help, ver;
 	private JMenuItem quit, instructions, about;
-	private String keysPressed = "";
 	private String previousOp  = "=";
-	
-	private JButton[] buttons;
-	private JButton btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, dec, clear;
-	private JButton divide, plus, minus, multiply, equals;
-	private ArrayList<String> topNumbers = new ArrayList<String>();
-	private String input;
+	private JButton  dec, clear, equals;
 	private CalcLogic logic = new CalcLogic();
-	private boolean   startNumber = true;
+	private boolean startNumber = true;
+	
+	// Internal Classes
 	private ActionListener numListener = new NumListener();
 	private ActionListener opListener = new OpListener();
 	
-	
-	
-	// Borders around the buttons
+	// Design Borders around the buttons
 	Border raisedbevel = BorderFactory.createRaisedBevelBorder();
 	Border loweredbevel = BorderFactory.createLoweredBevelBorder();
 	Border raisedBorder = BorderFactory.createEtchedBorder(EtchedBorder.RAISED);
 	Border compound;
 	Border redline = BorderFactory.createLineBorder(Color.red);
-	
-	ArrayList<Integer> calculations = new ArrayList<Integer>();
-	public ArrayList<String> list;
-	
-	
-	// I'm using coolors to know which panels I'm using
+
+	// I'm using colours to know which panels I'm using
 	Color color = new Color(255,255,0);
-	
+/**
+ * Constructor that will create the Calculator when the 
+ * object is created
+ */
 	public CalFrame(){
 		
 		super("John Quirke Calculator V 1.0");
@@ -94,14 +93,17 @@ public class CalFrame extends JFrame  {
         // Menu Items
         file = new JMenu("File");
         help = new JMenu("Help");
-        ver =  new JMenu("Version");
         menuBar.add(file);
         menuBar.add(help);
-        menuBar.add(ver);
+       
         // New menu items added to the menubar
-        quit = new JMenuItem("Quit");    
+        quit = new JMenuItem("Quit"); 
+        quit.addActionListener(numListener);
+        
         instructions = new JMenuItem("Instructions");
+        instructions.addActionListener(numListener);
         about = new JMenuItem("About");
+        about.addActionListener(numListener);
         // add items to the menu
         file.add(quit);
         help.add(instructions);
@@ -126,8 +128,10 @@ public class CalFrame extends JFrame  {
 	        JPanel eastSide = new JPanel(new GridLayout(4,1,2,4));
 	        eastSide.setPreferredSize(new Dimension(60, 100));
 	        compound = BorderFactory.createCompoundBorder(raisedbevel, loweredbevel);   
-	      
-			 String[] func = {"MR", "MC", "M+", "M-"};
+	        JPanel functions = new JPanel(new GridLayout(4,1,2,4));
+	        functions.setPreferredSize(new Dimension(80, 100));	   
+			
+	        String[] func = {"Sqrt", "1/x", "%", "CE"};
 		        for (int i = 0; i < func.length; i++) {
 		            JButton b = new JButton(func[i]);
 		            b.addActionListener(opListener);
@@ -137,8 +141,8 @@ public class CalFrame extends JFrame  {
 		        }
 	     
 	        // Grid to add the function buttons	        
-	        JPanel functions = new JPanel(new GridLayout(4,1,2,4));
-	        functions.setPreferredSize(new Dimension(80, 100));	       
+	       
+	            
 		    String[] opOrder = {"+", "-", "*", "/"};
 	        for (int i = 0; i < opOrder.length; i++) {
 	            JButton b = new JButton(opOrder[i]);
@@ -258,11 +262,20 @@ public class CalFrame extends JFrame  {
 			}
 	
 	
+	public JLabel getScreenTop(){
+		
+		return screenTop;
+	}
 	
+public JLabel getScreen(){
+		
+		return screen;
+	}
+
 	public void clearScreen(){
 		
 		screenTop.setText("Clear");       
-        screen.setText("0");       
+        screen.setText(" ");       
         logic.setTotal("0");
        
 	}
@@ -270,16 +283,17 @@ public class CalFrame extends JFrame  {
 	
 /**
  * Make the frame visible
- */
-		  public void makeVisable(){
+ *
+*/		 
+	public void makeVisable(){
 				 
 				 setVisible(true);
 			
 		 }
 
 		  
-		    /** Listener for all op buttons. */
-		    class OpListener implements ActionListener {
+ /** Listener for all op buttons. */
+ class OpListener implements ActionListener {
 		        public void actionPerformed(ActionEvent e) {
 		        	
 		        		            	
@@ -298,11 +312,18 @@ public class CalFrame extends JFrame  {
 		                    } else if (previousOp.equals("*")) {		                    	
 		                        logic.multiply(displayText);
 		                    } else if (previousOp.equals("/")) {		                    	
-		                        logic.divide(displayText);		                        
-		                    } 
-		                    
-		                    
-		                    printNums();
+		                        logic.divide(displayText);	
+		                    } else if (previousOp.equals("Sqrt")) {		                    	
+		                        logic.sqRoot(displayText);	
+		                    }else if (previousOp.equals("1/x")) {		                    	
+		                        logic.reciprocalFunction(displayText);	
+		                    }else if (previousOp.equals("CE")) {		                    	
+		                    	logic.clearExisting(displayText);   
+		                    }else if (previousOp.equals("%")) {		                    	
+		                        logic.percent(displayText);	
+		                   
+		                    }
+		                  
 		                    screen.setText("" + logic.getTotalString());
 		                    
 		                    
@@ -315,17 +336,41 @@ public class CalFrame extends JFrame  {
 		                previousOp = e.getActionCommand();
 		                screenTop.setText(e.getActionCommand());
 		            }
+
+		       
 		        }
+ 
+ class memListner implements ActionListener {
+		       
+	 public void actionPerformed(ActionEvent e) {
+		                
+		 startNumber = true;  
+		 previousOp = e.getActionCommand();
+		 screenTop.setText(e.getActionCommand());  
+		 String total = screen.getText();
+		 
+		                    if (previousOp.equals("M+")) {
+		                    	System.out.println("M+ pressed");
+		                    	
+		                    
+		                    	
+		                    	 
+		                    	
+		                    } else if (previousOp.equals("MR")) {		                    	
+		                    	System.out.println("MR pressed");
+		                    } else if (previousOp.equals("M-")) {		                    	
+		                    	System.out.println("M- pressed");
+		                    } else if (previousOp.equals("MC")) {		                    	
+		                    	System.out.println("MC pressed");
+		                    } 
+		                    
+		                    
+		             	                
+		              
+		            }
+		        }
+				
 		
-		    
-		    public void printNums(){
-	        	
-	        	for(String s : topNumbers){
-	        		
-	        		screenTop.setText(s);
-	        	}
-	        }
-		    
 		 /**
 		  * Action event numbers for the 
 		  */
@@ -348,11 +393,36 @@ public class CalFrame extends JFrame  {
 		    			clearScreen();
 
 		    		}
+		    		
+		    		if(e.getSource() == quit ){
+
+		    			System.exit(1);
+
+		    		}
+		    		
+		    		if(e.getSource() == instructions ){
+
+		    			JOptionPane instr = new JOptionPane("Instructions");
+		    			instr.showMessageDialog(null, "Press Lots of buttons");
+		    			clearScreen();
+
+		    		}
+		    		
+		    		if(e.getSource() == about ){
+
+		    			JOptionPane instr = new JOptionPane("About");
+		    			instr.showMessageDialog(null, "Java Calculator \n" +
+		    					"John Quirke \n" +
+		    					"Version 1.0");
+
+		    		}
 		    	}
 
 
 		    }// end action Listener
 
+
+	
 
 	
 	
